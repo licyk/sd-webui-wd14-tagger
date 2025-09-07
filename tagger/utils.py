@@ -3,7 +3,9 @@ from pathlib import Path
 
 from modules import scripts
 from tagger.preset import Preset
-from tagger.interrogator import Interrogator, WaifuDiffusionInterrogator
+from tagger.interrogator import Interrogator
+from tagger.wd14 import WaifuDiffusionInterrogator
+from tagger.cl import CLTaggerInterrogator
 
 preset = Preset(Path(scripts.basedir(), 'presets'))
 
@@ -13,6 +15,12 @@ interrogators: Dict[str, Interrogator] = {}
 def refresh_interrogators() -> List[str]:
     global interrogators
     interrogators = {
+        'cl_tagger_1_01': CLTaggerInterrogator(
+            'cl_tagger_1_01',
+            repo_id='cella110n/cl_tagger',
+            model_path='cl_tagger_1_01/model.onnx',
+            tag_mapping_path='cl_tagger_1_01/tag_mapping.json',
+        ),
         'wd-eva02-large-tagger-v3': WaifuDiffusionInterrogator(
             'wd-eva02-large-tagger-v3',
             repo_id='SmilingWolf/wd-eva02-large-tagger-v3',
