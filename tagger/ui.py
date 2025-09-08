@@ -408,6 +408,7 @@ def on_ui_tabs():
                 hide_rating_and_tag_confidents = utils.preset.component(
                     gr.Checkbox,
                     label='Hide rating and tag confidents',
+                    value=True,
                 )
 
             # output components
