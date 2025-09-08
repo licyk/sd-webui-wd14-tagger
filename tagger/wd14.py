@@ -104,12 +104,8 @@ class WaifuDiffusionInterrogator(Interrogator):
 
         # first 4 items are for rating (general, sensitive, questionable, explicit)
         ratings = dict(tags[:4].values)
-        print(f"ori tags: {tags}")
 
         # rest are regular tags
         tags = dict(tags[4:].values)
-
-        print(f"ratings: {ratings}")
-        print(f"tags: {tags}")
 
         return ratings, tags

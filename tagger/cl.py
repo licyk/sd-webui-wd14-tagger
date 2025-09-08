@@ -144,7 +144,15 @@ class CLTaggerInterrogator(Interrogator):
     def load(self) -> None:
         model_path, tag_mapping_path = self.download()
 
-        import torch
+        from launch import is_installed, run_pip
+        if not is_installed('onnxruntime'):
+            package = os.environ.get(
+                'ONNXRUNTIME_PACKAGE',
+                'onnxruntime-gpu'
+            )
+
+            run_pip(f'install {package}', 'onnxruntime')
+
         from onnxruntime import InferenceSession
 
         providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
@@ -247,18 +255,6 @@ class CLTaggerInterrogator(Interrogator):
         probs = stable_sigmoid(outputs[0])  # Assuming batch size 1
 
         predictions = get_tags(probs, self.tags[0])  # g_labels_data
-        # output_tags = []
-        # if predictions.get("rating"): output_tags.append(predictions["rating"][0][0].replace("_", " "))
-        # if predictions.get("quality"): output_tags.append(predictions["quality"][0][0].replace("_", " "))
-        # # Add other categories, respecting order and filtering meta if needed
-        # for category in ["artist", "character", "copyright", "general", "meta", "model"]:
-        #     tags_in_category = predictions.get(category, [])
-        #     for tag, prob in tags_in_category:
-        #         # Basic meta tag filtering for text output
-        #         if category == "meta" and any(p in tag.lower() for p in ['id', 'commentary', 'request', 'mismatch']):
-        #             continue
-        #         output_tags.append(tag.replace("_", " "))
-        # output_text = ", ".join(output_tags)
 
         ratings = dict(predictions.get("rating", []))
         tags = dict(
