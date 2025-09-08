@@ -46,7 +46,8 @@ def on_interrogate(
         replace_underscore_excludes: str,
         escape_tag: bool,
 
-        unload_model_after_running: bool
+        unload_model_after_running: bool,
+        hide_rating_and_tag_confidents: bool,
 ):
     if interrogator not in utils.interrogators:
         return ['', None, None, f"'{interrogator}' is not a valid interrogator"]
@@ -75,12 +76,20 @@ def on_interrogate(
         if unload_model_after_running:
             interrogator.unload()
 
-        return [
-            ', '.join(processed_tags),
-            ratings,
-            tags,
-            ''
-        ]
+        if hide_rating_and_tag_confidents:
+            return [
+                ', '.join(processed_tags),
+                None,
+                None,
+                ''
+            ]
+        else:
+            return [
+                ', '.join(processed_tags),
+                ratings,
+                tags,
+                ''
+            ]
 
     # batch process
     batch_input_glob = batch_input_glob.strip()
@@ -396,6 +405,10 @@ def on_ui_tabs():
                     gr.Checkbox,
                     label='Unload model after running',
                 )
+                hide_rating_and_tag_confidents = utils.preset.component(
+                    gr.Checkbox,
+                    label='Hide rating and tag confidents',
+                )
 
             # output components
             with gr.Column(variant='panel'):
@@ -468,7 +481,8 @@ def on_ui_tabs():
                     replace_underscore_excludes,
                     escape_tag,
 
-                    unload_model_after_running
+                    unload_model_after_running,
+                    hide_rating_and_tag_confidents,
                 ],
                 outputs=[
                     tags,
