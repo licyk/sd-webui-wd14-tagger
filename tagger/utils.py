@@ -6,6 +6,7 @@ from tagger.preset import Preset
 from tagger.interrogator import Interrogator
 from tagger.wd14 import WaifuDiffusionInterrogator
 from tagger.cl import CLTaggerInterrogator
+from tagger.convnext import ConvnextInterrogator
 
 preset = Preset(Path(scripts.basedir(), 'presets'))
 
@@ -15,11 +16,19 @@ interrogators: Dict[str, Interrogator] = {}
 def refresh_interrogators() -> List[str]:
     global interrogators
     interrogators = {
+        'convnextv2_huge.dbv4-full' : ConvnextInterrogator(
+            'convnextv2_huge.dbv4-full',
+            repo_id='animetimm/convnextv2_huge.dbv4-full',
+        ),
         'cl_tagger_1_01': CLTaggerInterrogator(
             'cl_tagger_1_01',
             repo_id='cella110n/cl_tagger',
             model_path='cl_tagger_1_01/model.onnx',
             tag_mapping_path='cl_tagger_1_01/tag_mapping.json',
+        ),
+        'eva02_large_patch14_448.dbv4-full': WaifuDiffusionInterrogator(
+            'eva02_large_patch14_448.dbv4-full',
+            repo_id='animetimm/eva02_large_patch14_448.dbv4-full',
         ),
         'wd-eva02-large-tagger-v3': WaifuDiffusionInterrogator(
             'wd-eva02-large-tagger-v3',

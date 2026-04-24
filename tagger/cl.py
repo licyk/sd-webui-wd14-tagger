@@ -1,7 +1,7 @@
 import os
 import json
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Dict
 from pathlib import Path
 from dataclasses import dataclass
 from huggingface_hub import hf_hub_download
@@ -230,7 +230,10 @@ class CLTaggerInterrogator(Interrogator):
     def interrogate(
             self,
             image: Image
-    ) -> dict[str, list]:
+    ) -> Tuple[
+        Dict[str, float],  # rating confidents
+        Dict[str, float]  # tag confidents
+    ]:
 
         # init model
         if not hasattr(self, 'model') or self.model is None:
