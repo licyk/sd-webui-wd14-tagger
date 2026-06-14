@@ -2,12 +2,19 @@ from typing import Tuple, List, Dict
 from PIL import Image
 
 from modules import shared
-from modules.deepbooru import re_special as tag_escape_pattern
+try:
+    from modules.deepbooru import re_special as tag_escape_pattern
+except ImportError:
+    import re
+    tag_escape_pattern = re.compile(r'([\\()])')
 
 
 # select a device to process
-use_cpu = ('all' in shared.cmd_opts.use_cpu) or (
+try:
+    use_cpu = ('all' in shared.cmd_opts.use_cpu) or (
         'interrogate' in shared.cmd_opts.use_cpu)
+except Exception:
+    use_cpu = shared.cmd_opts.cpu
 
 
 class Interrogator:

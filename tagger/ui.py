@@ -9,7 +9,17 @@ from PIL import Image, UnidentifiedImageError
 
 from modules.call_queue import wrap_gradio_gpu_call
 from modules import ui
-from modules import generation_parameters_copypaste as parameters_copypaste
+try:
+    from modules.infotext_utils import bind_buttons
+except ImportError:
+    import gradio as gr
+    from modules.infotext_utils import ParamBinding, register_paste_params_button, create_buttons
+    def bind_buttons(buttons, send_image, send_generate_info):
+        """old function for backwards compatibility; do not use this, use register_paste_params_button"""
+        for tabname, button in buttons.items():
+            source_text_component = send_generate_info if isinstance(send_generate_info, gr.components.Component) else None
+            source_tabname = send_generate_info if isinstance(send_generate_info, str) else None
+            register_paste_params_button(ParamBinding(paste_button=button, tabname=tabname, source_text_component=source_text_component, source_image_component=send_image, source_tabname=source_tabname))
 
 from tagger import format, utils
 from tagger.utils import split_str
@@ -420,8 +430,8 @@ def on_ui_tabs():
                 )
 
                 with gr.Row():
-                    parameters_copypaste.bind_buttons(
-                        parameters_copypaste.create_buttons(
+                    bind_buttons(
+                        create_buttons(
                             ["txt2img", "img2img"],
                         ),
                         None,
