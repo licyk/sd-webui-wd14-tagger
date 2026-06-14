@@ -10,7 +10,7 @@ from PIL import Image, UnidentifiedImageError
 from modules.call_queue import wrap_gradio_gpu_call
 from modules import ui
 try:
-    from modules.infotext_utils import bind_buttons
+    from modules.infotext_utils import bind_buttons, create_buttons
 except ImportError:
     import gradio as gr
     from modules.infotext_utils import ParamBinding, register_paste_params_button, create_buttons
